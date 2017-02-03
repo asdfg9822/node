@@ -32,9 +32,9 @@ http://node.green/ 에서 ES6 호환성 확인 가능
 npm install을 할 경우 --save 옵션을 주면 package.json에 의존성이 자동 등록됨
 npm install polymer와 bower install polymer의 결과가 다르게 나옴
 bower의 경우 webcompnent polyfill과 polymer lib의 조합. 프론트엔드 전용 라이브러리가 나옴
-npm의 경우 'Pre-processor system for automatic template compiling.' 라는게 나옴
+npm의 경우 'pre-processor system for automatic template compiling.' 라는게 나옴
 몰랐는데 관리하는 개념이 다른게 아니라 저장소도 완전 다르다(당연한건데..)
-jQuery의 경우 같은 방식으로 설치했는데 두 패키지 관리자 모두 동일한 jQuery가 있었음
+jquery의 경우 같은 방식으로 설치했는데 두 패키지 관리자 모두 동일한 jquery가 있었음
 */
 
 //대신 node js에서는 전역변수를 global으로 접근
