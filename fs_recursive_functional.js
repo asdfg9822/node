@@ -3,44 +3,84 @@
  */
 
 var fs = require('fs');
-
-var dir = process.argv[2] || './testdir'; //prompt에서 인자로 입력또는 기본값
-
-(function searchDir(dir) {
-    fs.readdir(dir, function (err, files) { //callback arg0 : err 인자, arg1 : 파일이름의 리스트
-        if (err) {
-            throw err;
-        }
-
-        //files 는 파일 객체가 아닌 파일 이름이 담긴 배열
-        files.forEach(function (file) {
-            var path = dir + '\\' + file;
-
-            //path를 클로저변수로 사용
-            (function (path) {
-                //stat을 통해 해당 file 또는 dir의 상태 정보를 얻을 수 있음
-                fs.stat(path, function (err, stats) {
-                    console.log((stats.isDirectory() ? "[D]" : "[F]"), path);
-
-                    (stats.isDirectory()) ? searchDir(path): fileProcess(path);  //디렉토리면 반복탐색 파일이면 파일처리
-                });
-            })(path);
-        });
-
-        //파일에 관련된 처리를 진행
-        function fileProcess(path) {
-
-        }
-
-    });
-})(dir);
+var _ = require('underscore')
 
 function getBaseTmp() {
 
 }
 
-function minin(obj) {
+function convertView(condition, target) {
 
 }
 
-//mixin.apply(obj, args)
+function convertViewContoller() {
+
+}
+
+function convertViewModel() {
+
+}
+
+/*
+View
+*/
+
+/*
+ViewController
+*/
+function convertFormula(baseObj, formula) {
+    if(formula) {
+
+    }
+}
+
+/*
+ViewModel
+*/
+
+
+/*
+Object to Source Code
+*/
+function Obj2Source(obj) {
+    if(!_.isObject(obj)) {
+        console.error(obj);
+        console.error("Above Data Type is not Object");
+        return;
+    }
+
+    var source = JSON.stringify(obj);
+    console.log(source);
+
+    source.replace('')
+
+    // function removeQuote
+}
+
+function objToString (obj, defaultString) {
+    return _.reduce(obj, function (source, curr, key) {
+
+        var value = !_.isFunction(curr) && _.isObject(curr) ? objToString(curr, source) : curr;
+
+        console.log(key + ":" + value);
+        return source;
+
+    }, defaultString);
+}
+
+
+var result = objToString({1:'2', 2:function() {
+    return this;
+}, obj: { obj2: {}}});
+
+console.log(result)
+
+
+
+/*
+Style
+*/
+function addClass(target, className) {
+
+}
+
