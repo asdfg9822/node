@@ -69,7 +69,7 @@ function objToString (obj, defaultString) {
 
         var value = !_.isFunction(curr) && _.isObject(curr) ? objToString(curr, source) : curr;
 
-     //   console.log(key + ":" + value);
+            //console.log(key + ":" + value);
         return source;
 
     }, defaultString);
@@ -106,17 +106,145 @@ function removeTransformGenerator() {
 
 var rmTransformChar = removeTransformGenerator();
 var result = rmTransformChar('#{okok}');
-//console.log(result);
+
+var TYPE = {
+    VIEW: 'View',
+    VM: 'ViewModel',
+    VC: 'ViewController'
+};
+
+function getSourceType(id) {
+    var result = id.match(/(View[A-Za-z]*)$/g);
+    result = result ? result[0] : 'Unknown';
+
+    for(var t in TYPE) {
+        if(TYPE.hasOwnProperty(t) && TYPE[t] === result) {
+            return TYPE[t];
+        }
+    }
+
+    return 'Unknown';
+}
+
+/*
+ EXT JS Parse
+ */
+(function(global) {
+    global.Ext = {
+        define: function (id, props) {
+            var result = getSourceType(id);
+            console.log("Target ID : ", id);
+            console.log("Target TYPE : ", result);
+
+            //console.log(props.data);
+
+        }
+    };
+})(this.window || global); //browser || node
+
+require('./test/testfile.js');
 
 
 /*
- EXT JS
- */
-global.Ext = {
-    define: function (id, props) {
-        console.log(id);
-        console.log(props);
-    }
-};
+config의 설정된 prop과 비교해서 있으면 그 안의 데이터를 넣어 줌
+일치된 prop은 객체에서 제거하고 다른 값을 검사
+*/
+var config = {
+    View: {
+        data: {
+            name: 'properties',
+            value: function(data) {
+                var properties = {};
+                for(var key in data) {
+                    if(data.hasOwnProperty(key)) {
+                        properties[key] = {
+                            type: Object,
+                            value: function () {
+                                return data[key];
+                            }
+                        }
+                    }
+                }
 
-require('./test/testfile.js');
+                return properties;
+            }
+        },
+
+        formulas: {
+            name: 'formulas',
+            value: function (data) {
+                // var formulas = {};
+                //
+                // if(data.bind) {
+                //
+                //     data = _.omit('bind');
+                // }
+                // if(data.get) {
+                //
+                //     data = _.omit('get');
+                // }
+                //
+                // for(var key in data) {
+                //     if (data.hasOwnProperty(key)) {
+                //
+                //     }
+                // }
+                //
+                // return formulas;
+
+                //TODO get, bind 조합하여 사용되는 것 변경
+                //TODO bind -> get에서 사용될 데이터 바인딩
+                //TODO get -> 바인딩된 데이터 정보를 넘겨줘서 작업
+
+                return data;
+            }
+        }
+    },
+    ViewModel: {
+
+    },
+    ViewController: {
+
+    }
+}
+
+
+// function convertToText(obj) {
+//     //create an array that will later be joined into a string.
+//     var string = [];
+//
+//     //is object
+//     //    Both arrays and objects seem to return "object"
+//     //    when typeof(obj) is applied to them. So instead
+//     //    I am checking to see if they have the property
+//     //    join, which normal objects don't have but
+//     //    arrays do.
+//     if (typeof(obj) == "object" && (obj.join == undefined)) {
+//         string.push("{");
+//         for (prop in obj) {
+//             string.push(prop, ": ", convertToText(obj[prop]), ",");
+//         };
+//         string.push("}");
+//
+//         //is array
+//     } else if (typeof(obj) == "object" && !(obj.join == undefined)) {
+//         string.push("[")
+//         for(prop in obj) {
+//             string.push(convertToText(obj[prop]), ",");
+//         }
+//         string.push("]")
+//
+//         //is function
+//     } else if (typeof(obj) == "function") {
+//         string.push(obj.toString())
+//
+//         //all other values can be done with JSON.stringify
+//     } else {
+//         string.push(JSON.stringify(obj))
+//     }
+//
+//     return string.join("")
+// }
+//
+// var result = convertToText(config);
+// console.log(result);
