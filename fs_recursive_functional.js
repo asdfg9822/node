@@ -115,7 +115,7 @@ var TYPE = {
 
 function getSourceType(id) {
     var result = id.match(/(View[A-Za-z]*)$/g);
-    result = result ? result[0] : 'Unknown';
+    result = result ? result[0] : TYPE.VIEW;
 
     for(var t in TYPE) {
         if(TYPE.hasOwnProperty(t) && TYPE[t] === result) {
@@ -123,7 +123,7 @@ function getSourceType(id) {
         }
     }
 
-    return 'Unknown';
+    return TYPE.VIEW;
 }
 
 /*
@@ -138,6 +138,8 @@ function getSourceType(id) {
 
             //console.log(props.data);
 
+            //TODO 모든 define된 객체를 배열 또는 VM, View, VC각각의 배열로 관리
+            //TODO 또는 controller / viewmodel / widget 의 prefix로 구분 가능
         }
     };
 })(this.window || global); //browser || node
@@ -248,3 +250,17 @@ var config = {
 //
 // var result = convertToText(config);
 // console.log(result);
+
+
+/*
+
+TODO
+
+1. 모든 파일 Import
+2. 파일 Import값 배열로 관리
+3. 특정 Key값으로 데이터를 가져오기
+4. xtype을 sc-link로 변환 & HTML추가할 방법 고민 & event등록
+
+다른건 몰라도 View, Grid형태만이라도
+
+*/
