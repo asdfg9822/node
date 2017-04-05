@@ -115,7 +115,7 @@ global.jsCnt = 0;
 
         //Polymer 기본 템플릿 바탕으로 변환
         var baseTmp = getPolymerBaseTmp();
-        var modifiedTmp = transformView(baseTmp, view, Config.viewConfig);
+        var modifiedTmp = transformView(baseTmp, view, Config.viewConfig, Config.viewXtypeConfig);
         modifiedTmp = transformViewController(modifiedTmp, vc, Config.vcConfig);
         modifiedTmp = transformViewModel(modifiedTmp, vm, Config.vmConfig);
 

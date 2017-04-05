@@ -2,6 +2,8 @@
   "name": "nodejs-test",
   "version": "0.0.1",
   "dependencies": {
+    "html-beautify": "^1.0.4",
+    "jsdom": "^9.12.0",
     "underscore": "^1.8.3"
   }
 }
