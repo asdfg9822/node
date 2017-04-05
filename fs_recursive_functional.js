@@ -261,6 +261,9 @@ TODO
 3. 특정 Key값으로 데이터를 가져오기
 4. xtype을 sc-link로 변환 & HTML추가할 방법 고민 & event등록
 
+- html_beautify로 마지막에 코드 변형해주기
+-
+
 다른건 몰라도 View, Grid형태만이라도
 
 */
