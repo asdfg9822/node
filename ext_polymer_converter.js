@@ -9,7 +9,11 @@ var fs = require('fs');
 var _ = require('underscore');
 var jsdom = require('jsdom').jsdom;
 var serializeDocument = require("jsdom").serializeDocument;
-var html_beautify = require("html-beautify");
+
+// Code Beautify 모듈
+// var beautify_js = require('js-beautify'); // also available under "js" export
+// var beautify_css = require('js-beautify').css;
+// var beautify_html = require('js-beautify').html;
 
 /**
  * 상수
@@ -33,7 +37,7 @@ global.extList = [];
 global.jsCnt = 0;
 
 /**
- * Preloader
+ * preloader
  */
 (function(global) {
     //Ext Custom Define
@@ -41,7 +45,7 @@ global.jsCnt = 0;
         define: function (id, props) {
             //Control Property
             props["srcId"] = id;
-            props["srcType"] = getSourceType(props.alias);
+            props["srcType"] = props["xtype"] = getSourceType(props.alias);
             props["srcAlias"] = getSourceAlias(props.alias);
 
             //Input Target Ext.component
@@ -119,12 +123,19 @@ global.jsCnt = 0;
         modifiedTmp = transformViewController(modifiedTmp, vc, Config.vcConfig);
         modifiedTmp = transformViewModel(modifiedTmp, vm, Config.vmConfig);
 
+        //<body> 밑의 영역만 가져오기
+
+        //Polymer ID 등록 및 태그 변경
+        //<template>은 동작이 되지 않아 <template-zone>으로 생성 후 변경
+
         //DOM -> String
         var resultText = serializeDocument(baseTmp);
         console.log(resultText);
 
         //Code Beautify
-        //output = html_beautify(resultText);
+        //beautify_js(js)
+        //beautify_css(css)
+        //beautify_html(html)
 
         //console.log(output);
 

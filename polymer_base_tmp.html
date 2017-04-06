@@ -5,25 +5,25 @@
     <title>Polymer 기본 템플릿</title>
 </head>
 <body>
-<div id="link-zone">
-
-</div>
-<dom-module id="template-id-zone">
-    <style>
-        :host {
-        @aply(--vbox-layout);
-        }
-    </style>
-
-    <div id="template-zone">
+    <div id="link-zone">
 
     </div>
+    <dom-module id="template-id-zone">
+        <style>
+            :host {
+                @apply(--vbox-layout);
+            }
+        </style>
 
-    <script id="script">
-        Polymer({
-            is: 'template-id-zone',
-        });
-    </script>
+        <template-zone id="template-zone">
+
+        </template-zone>
+
+        <script id="script">
+            Polymer({
+                is: 'template-id-zone',
+            });
+        </script>
 </dom-module>
 </body>
 </html>
