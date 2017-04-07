@@ -97,7 +97,7 @@ global.jsCnt = 0;
 
     //recursive
     for(var i=0,len=files.length; i<len; i++) {
-        var path = dir + '\\' + files[i];
+        var path = dir + '/' + files[i];
         var stats = fs.statSync(path);
 
         (stats.isDirectory()) ? searchDir(path): fileProcess(path);
