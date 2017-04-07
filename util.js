@@ -37,17 +37,19 @@ var BIND = require('./const_binding');
             return _.findWhere(extList, {alias:TYPE.VM + "." + srcId});
         },
         //transformView
-        transformView: function (tmp, extObj, config, xtypeConfig) {
+        transformView: function (tmp, extObj, config) {
+            var convertConfig;
+            var parentDom = tmp.getElementById('template-zone'); //TODO Element 주입
             for(var key in extObj) {
-                var prop;
-                if(extObj.hasOwnProperty(key) && (prop = config[key])) {
-                    var currValue = extValue = extObj[key];
+                if(extObj.hasOwnProperty(key) && (convertConfig = config[key])) {
+                    var extValue = extObj[key];
 
-                    var targetDom = tmp.getElementById('template-zone'); //TODO Element 주입
-                    _.isFunction(prop.value) ? prop.value.call(prop, targetDom, extValue) : prop.value;
+                    var result = _.isFunction(convertConfig.value) ? convertConfig.value.call(convertConfig, parentDom, extValue, extObj) : convertConfig.value;
+                    if(result) {
+                        parentDom = result.parentDom || parentDom;
+                    }
                 }
             }
-
             return tmp;
         },
         //transformViewModel

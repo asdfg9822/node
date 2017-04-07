@@ -45,8 +45,15 @@ global.jsCnt = 0;
         define: function (id, props) {
             //Control Property
             props["srcId"] = id;
-            props["srcType"] = props["xtype"] = getSourceType(props.alias);
+            props["srcType"] = getSourceType(props.alias);
             props["srcAlias"] = getSourceAlias(props.alias);
+            props["root"] = true;
+
+            //initConfig를 이용한 설정일 경우에는 getConfigurator에서 추가한다
+            if(_.isFunction(props.initConfig)) {
+                props.initConfig.call(global.Ext, props);
+                return;
+            }
 
             //Input Target Ext.component
             global.extList.push(props);
@@ -59,6 +66,24 @@ global.jsCnt = 0;
             function getSourceAlias(alias) {
                 return alias.split(".")[1];
             }
+        },
+        getConfigurator: function () {
+            return {
+                merge: function(me, config, props) {
+                    for(var key in config) {
+                        if(config.hasOwnProperty(key)) {
+                            props[key] = config[key];
+                        }
+                    }
+                    global.extList.push(props);
+                }
+            }
+        },
+        create: function () {
+            return {};
+        },
+        callParent: function (configArr) {
+
         }
     };
 })(global);
