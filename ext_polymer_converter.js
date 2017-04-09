@@ -48,6 +48,7 @@ global.jsCnt = 0;
             props["srcType"] = getSourceType(props.alias);
             props["srcAlias"] = getSourceAlias(props.alias);
             props["is"] = getPolymerId(id);
+            props["isType"] = "es"; //default는 es로했음
             props["root"] = true;
 
             //initConfig를 이용한 설정일 경우에는 getConfigurator에서 추가한다
@@ -173,7 +174,7 @@ global.jsCnt = 0;
         //제대로 된 폴리머 템플릿으로 변경 작업
         resultText = resultText.replace(/id="template-zone" /g, '');
         resultText = resultText.replace(/template-zone/g, 'template');
-        resultText = resultText.replace(/template-id-zone/g, view.is);
+        resultText = resultText.replace(/template-id-zone/g, view.isType + "-" + view.is);
 
         console.log(resultText);
 
