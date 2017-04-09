@@ -47,6 +47,7 @@ global.jsCnt = 0;
             props["srcId"] = id;
             props["srcType"] = getSourceType(props.alias);
             props["srcAlias"] = getSourceAlias(props.alias);
+            props["is"] = getPolymerId(id);
             props["root"] = true;
 
             //initConfig를 이용한 설정일 경우에는 getConfigurator에서 추가한다
@@ -57,6 +58,14 @@ global.jsCnt = 0;
 
             //Input Target Ext.component
             global.extList.push(props);
+
+            //View : widget, VC : ViewController, VM : ViewModel
+            function getPolymerId(filePath) {
+                if(!filePath) return;
+                var fileNames = filePath.split(".");
+                var fileName =  fileNames[fileNames.length -1];
+                return Converter.Util.camelToDashCase(fileName).slice(1);
+            }
 
             //View : widget, VC : ViewController, VM : ViewModel
             function getSourceType(alias) {
@@ -160,6 +169,12 @@ global.jsCnt = 0;
 
         //DOM -> String
         var resultText = serializeDocument(baseTmp);
+
+        //제대로 된 폴리머 템플릿으로 변경 작업
+        resultText = resultText.replace(/id="template-zone" /g, '');
+        resultText = resultText.replace(/template-zone/g, 'template');
+        resultText = resultText.replace(/template-id-zone/g, view.is);
+
         console.log(resultText);
 
         //Code Beautify
