@@ -60,10 +60,12 @@ global.jsCnt = 0;
 
             //View : widget, VC : ViewController, VM : ViewModel
             function getSourceType(alias) {
+                if(!alias) return;
                 return alias.split(".")[0];
             }
 
             function getSourceAlias(alias) {
+                if(!alias) return;
                 return alias.split(".")[1];
             }
         },
@@ -107,7 +109,10 @@ global.jsCnt = 0;
     function fileProcess(path) {
         var paths = path.split('.');
 
-        (paths[paths.length - 1] === 'js') ? require(path): console.log(path, "- This file is not a JS file");
+
+        console.log(path);
+
+        (paths[paths.length - 1] === 'js') ? require(path) : console.log(path, "- This file is not a JS file");
     }
 })(dir);
 
