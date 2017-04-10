@@ -13,7 +13,7 @@ var serializeDocument = require("jsdom").serializeDocument;
 // Code Beautify 모듈
 // var beautify_js = require('js-beautify'); // also available under "js" export
 // var beautify_css = require('js-beautify').css;
-// var beautify_html = require('js-beautify').html;
+//var beautify_html = require('html-beautify').html;
 
 /**
  * 상수
@@ -46,14 +46,25 @@ global.jsCnt = 0;
             //Control Property
             props["srcId"] = id;
             props["srcType"] = getSourceType(props.alias);
-            props["srcAlias"] = getSourceAlias(props.alias);
             props["is"] = getPolymerId(id);
-            props["isType"] = "es"; //default는 es로했음
+            props["isPath"] = getFilePath(id); //default는 es로했음
             props["root"] = true;
+
+            //파일 유형 (em, es, ep)
+            if(props.modal) {
+                props["isType"] = "ep";
+            } else if(props.layout && props.layout.type === "card") {
+                props["isType"] = "em";
+            } else {
+                props["isType"] = "es";
+            }
 
             //initConfig를 이용한 설정일 경우에는 getConfigurator에서 추가한다
             if(_.isFunction(props.initConfig)) {
-                props.initConfig.call(global.Ext, props);
+                props.callParent = function (configArr) {
+                    global.extList.push(configArr[0]);
+                }
+                props.initConfig.call(props);
                 return;
             }
 
@@ -61,11 +72,26 @@ global.jsCnt = 0;
             global.extList.push(props);
 
             //View : widget, VC : ViewController, VM : ViewModel
-            function getPolymerId(filePath) {
-                if(!filePath) return;
-                var fileNames = filePath.split(".");
+            function getPolymerId(package) {
+                if(!package) return;
+                var fileNames = package.split(".");
                 var fileName =  fileNames[fileNames.length -1];
                 return Converter.Util.camelToDashCase(fileName).slice(1);
+            }
+
+            //Package 경로로 FilePath를 가져옴
+            function getFilePath(package) {
+                if(!package) return;
+                var result = package.split(".");
+                var moduleName = result[0].toLowerCase();
+
+                var realFilePath = [moduleName];        //Module Name
+                realFilePath.push("app");   //app forder
+                for(var i=1,len=result.length; i<len-1; i++) {
+                    realFilePath.push(result[i]);   //Other Path
+                }
+
+                return realFilePath.slice(0, realFilePath.length).join("/");
             }
 
             //View : widget, VC : ViewController, VM : ViewModel
@@ -74,31 +100,23 @@ global.jsCnt = 0;
                 return alias.split(".")[0];
             }
 
-            function getSourceAlias(alias) {
-                if(!alias) return;
-                return alias.split(".")[1];
-            }
-        },
-        getConfigurator: function () {
-            return {
-                merge: function(me, config, props) {
-                    for(var key in config) {
-                        if(config.hasOwnProperty(key)) {
-                            props[key] = config[key];
-                        }
-                    }
-                    global.extList.push(props);
-                }
-            }
         },
         create: function () {
             return {};
         },
-        callParent: function (configArr) {
-
+        String: function () {
+            return {
+                format: function (data) {
+                    return data;
+                }
+            };
         }
     };
 })(global);
+
+Ext.String.format = function (data) {
+    return data;
+};
 
 /**
  * File Search (Synchronize)
@@ -119,8 +137,7 @@ global.jsCnt = 0;
     function fileProcess(path) {
         var paths = path.split('.');
 
-
-        console.log(path);
+        console.error((paths[paths.length - 1] === 'js'), path);
 
         (paths[paths.length - 1] === 'js') ? require(path) : console.log(path, "- This file is not a JS file");
     }
@@ -169,23 +186,29 @@ global.jsCnt = 0;
         //<template>은 동작이 되지 않아 <template-zone>으로 생성 후 변경
 
         //DOM -> String
-        var resultText = serializeDocument(baseTmp);
+        var resultText = baseTmp.getElementById("template-id-zone").outerHTML;
 
         //제대로 된 폴리머 템플릿으로 변경 작업
-        resultText = resultText.replace(/id="template-zone" /g, '');
         resultText = resultText.replace(/template-zone/g, 'template');
         resultText = resultText.replace(/template-id-zone/g, view.isType + "-" + view.is);
-
-        console.log(resultText);
+        resultText = resultText.replace(/ id="template"/g, '');
+        resultText = resultText.replace(/<\/template>/g, "\n</template>");
 
         //Code Beautify
         //beautify_js(js)
         //beautify_css(css)
-        //beautify_html(html)
+        //resultText = beautify_html(resultText);
+
+        console.log(resultText);
 
         //console.log(output);
 
         //파일 Write
+        fs.writeFile('test/' + view.isPath + "/" + view.isType + "-" + view.is + '.html', resultText, 'utf8', function (err) {
+            if(err) {
+                console.error(err);
+            }
+        });
     });
 
 })(global.extList);

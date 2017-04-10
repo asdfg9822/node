@@ -19,7 +19,6 @@ Converter.Config = require('./config'); //Converter 관련 템플릿, 설정 등
  * 상수
  * */
 var TYPE = require('./const_type');
-var BIND = require('./const_binding');
 
 (function() {
 
@@ -39,7 +38,7 @@ var BIND = require('./const_binding');
         //transformView
         transformView: function (tmp, extObj, config) {
             var convertConfig;
-            var parentDom = tmp.getElementById('template-zone'); //TODO Element 주입
+            var parentDom = tmp.getElementById('template-zone'); //최상위 엘리먼트 주입
             for(var key in extObj) {
                 if(extObj.hasOwnProperty(key) && (convertConfig = config[key])) {
                     var extValue = extObj[key];
@@ -54,27 +53,37 @@ var BIND = require('./const_binding');
         },
         //transformViewModel
         transformViewModel: function (tmp, extObj, config, xtypeConfig) {
-            if(_.isEmpty(extObj)) {
-                return tmp;
-            }
-
-
             return tmp;
         },
         //transformViewController
         transformViewController: function (tmp, extObj, config) {
-            if(_.isEmpty(extObj)) {
-                return tmp;
-            }
-
             return tmp;
         },
 
-    };
+        /*CaseMap*/
+        _caseMap: {},
+        _rx: {
+            dashToCamel: /-[a-z]/g,
+            camelToDash: /([A-Z])/g
+        },
 
-    function ifValueIsFuncExec(dom, obj, config) {
-        (_.isFunction(obj.value)) ? obj.value.call(obj, dom, obj) : console.error(obj.xtype || "", "value가 함수가 아님");
-    }
+        dashToCamelCase: function(dash) {
+            return this._caseMap[dash] || (
+                    this._caseMap[dash] = dash.indexOf('-') < 0 ? dash : dash.replace(this._rx.dashToCamel,
+                            function(m) {
+                                return m[1].toUpperCase();
+                            }
+                        )
+                );
+        },
+
+        camelToDashCase: function(camel) {
+            return this._caseMap[camel] || (
+                    this._caseMap[camel] = camel.replace(this._rx.camelToDash, '-$1').toLowerCase()
+                );
+        }
+
+    };
 
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
