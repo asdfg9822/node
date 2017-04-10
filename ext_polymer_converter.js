@@ -31,7 +31,7 @@ Converter.Config = require('./config'); //Converter 관련 템플릿, 설정 등
 /**
  * Global Variable
  */
-var dir = "./test";
+var dir = "./input";
 
 global.extList = [];
 global.jsCnt = 0;
@@ -204,7 +204,7 @@ Ext.String.format = function (data) {
         //console.log(output);
 
         //파일 Write
-        fs.writeFile('test/' + view.isPath + "/" + view.isType + "-" + view.is + '.html', resultText, 'utf8', function (err) {
+        fs.writeFile('input/' + view.isPath + "/" + view.isType + "-" + view.is + '.html', resultText, 'utf8', function (err) {
             if(err) {
                 console.error(err);
             }
